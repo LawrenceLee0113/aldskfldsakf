@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>李庭愷 | 炫砲個人檔案</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;700;900&family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #0ff;
+            --secondary-color: #f0f;
+            --bg-color: #050505;
+        }
+
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            background-color: var(--bg-color);
+            color: #fff;
+            font-family: 'Noto Sans TC', sans-serif;
+            cursor: crosshair; /* 炫酷的游標 */
+        }
+
+        /* 隱藏預設捲軸，自訂捲軸樣式 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #000;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        /* 背景 Canvas */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        /* 故障藝術 Glitch 效果 */
+        .glitch-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        .glitch {
+            font-family: 'Orbitron', 'Noto Sans TC', sans-serif;
+            font-size: 5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            position: relative;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+        @media (max-width: 768px) {
+            .glitch { font-size: 3rem; }
+        }
+        .glitch::before, .glitch::after {
+            content: attr(data-text);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+        }
+        .glitch::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--secondary-color);
+            clip: rect(24px, 550px, 90px, 0);
+            animation: glitch-anim-2 3s infinite linear alternate-reverse;
+        }
+        .glitch::after {
+            left: -2px;
+            text-shadow: -2px 0 var(--primary-color);
+            clip: rect(85px, 550px, 140px, 0);
+            animation: glitch-anim 2.5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(78px, 9999px, 4px, 0); }
+            20% { clip: rect(10px, 9999px, 83px, 0); }
+            40% { clip: rect(51px, 9999px, 32px, 0); }
+            60% { clip: rect(98px, 9999px, 14px, 0); }
+            80% { clip: rect(23px, 9999px, 67px, 0); }
+            100% { clip: rect(71px, 9999px, 95px, 0); }
+        }
+        @keyframes glitch-anim-2 {
+            0% { clip: rect(12px, 9999px, 54px, 0); }
+            20% { clip: rect(81px, 9999px, 2px, 0); }
+            40% { clip: rect(33px, 9999px, 78px, 0); }
+            60% { clip: rect(91px, 9999px, 19px, 0); }
+            80% { clip: rect(44px, 9999px, 88px, 0); }
+            100% { clip: rect(62px, 9999px, 35px, 0); }
+        }
+
+        /* 霓虹邊框卡片 */
+        .neon-card {
+            background: rgba(10, 10, 10, 0.6);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 255, 0.2);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.1), inset 0 0 20px rgba(0, 255, 255, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .neon-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 30px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(0, 255, 255, 0.2);
+            transform: translateY(-5px);
+        }
+
+        /* 剃光頭警告區專用特效 */
+        .warning-zone {
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(255, 0, 0, 0.1),
+                rgba(255, 0, 0, 0.1) 10px,
+                rgba(0, 0, 0, 0.8) 10px,
+                rgba(0, 0, 0, 0.8) 20px
+            );
+            border: 2px solid #ff003c;
+            box-shadow: 0 0 20px rgba(255, 0, 60, 0.4);
+            animation: pulse-red 2s infinite;
+        }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 20px rgba(255, 0, 60, 0.2); }
+            50% { box-shadow: 0 0 40px rgba(255, 0, 60, 0.6); }
+            100% { box-shadow: 0 0 20px rgba(255, 0, 60, 0.2); }
+        }
+        
+        .typewriter-text {
+            border-right: 2px solid var(--primary-color);
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typing 3s steps(30, end), blink-caret .75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary-color); }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-cyan-500 selection:text-black">
+
+    <canvas id="particle-canvas"></canvas>
+
+    <main class="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 text-center">
+        <p class="text-cyan-400 font-bold tracking-[0.2em] mb-4 text-sm md:text-base typewriter-text inline-block">
+            SYSTEM_INITIALIZING... USER_FOUND
+        </p>
+        
+        <div class="glitch-wrapper mb-6">
+            <h1 class="glitch" data-text="李庭愷">李庭愷</h1>
+        </div>
+
+        <h2 class="text-xl md:text-3xl font-light text-gray-300 mb-8 tracking-widest uppercase" style="font-family: 'Orbitron', sans-serif;">
+            <span class="text-fuchsia-500 font-bold">Newbie</span> Graduate <span class="mx-2">|</span> 
+            <span class="text-cyan-400 font-bold">Future</span> Soldier
+        </h2>
+
+        <a href="#about" class="px-8 py-3 border border-cyan-400 text-cyan-400 rounded-full hover:bg-cyan-400 hover:text-black transition-all duration-300 font-bold tracking-wider hover:shadow-[0_0_20px_rgba(0,255,255,0.6)]">
+            載入個人檔案 ENTER
+        </a>
+    </main>
+
+    <section id="about" class="relative z-10 py-20 px-6 max-w-6xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- 狀態卡片 -->
+            <div class="neon-card rounded-2xl p-8">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-3 h-3 rounded-full bg-cyan-400 shadow-[0_0_10px_#0ff] animate-pulse"></div>
+                    <h3 class="text-2xl font-bold text-cyan-400 tracking-wider">STATUS UPDATE</h3>
+                </div>
+                <p class="text-gray-300 text-lg leading-relaxed mb-4">
+                    嗨！我是<span class="text-white font-bold">李庭愷</span>。<br>
+                    今年剛從大學「順利登出」，目前正在待業... 哦不，是等待「國軍 Online」的伺服器開放登入。
+                </p>
+                <div class="mt-6 flex flex-wrap gap-3">
+                    <span class="px-4 py-1 rounded-full bg-gray-800 border border-gray-600 text-sm">🎓 2026 應屆畢業生</span>
+                    <span class="px-4 py-1 rounded-full bg-cyan-900 border border-cyan-500 text-sm text-cyan-200">⚔️ 準役男</span>
+                    <span class="px-4 py-1 rounded-full bg-fuchsia-900 border border-fuchsia-500 text-sm text-fuchsia-200">✨ 享受人生最後的自由</span>
+                </div>
+            </div>
+
+            <!-- 技能/特質卡片 -->
+            <div class="neon-card rounded-2xl p-8">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-3 h-3 rounded-full bg-fuchsia-500 shadow-[0_0_10px_#f0f] animate-pulse"></div>
+                    <h3 class="text-2xl font-bold text-fuchsia-500 tracking-wider">CURRENT SKILLS</h3>
+                </div>
+                <ul class="space-y-4">
+                    <li>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-300">熬夜打 Game 耐力</span>
+                            <span class="text-cyan-400">99%</span>
+                        </div>
+                        <div class="w-full bg-gray-800 rounded-full h-2">
+                            <div class="bg-cyan-400 h-2 rounded-full" style="width: 99%"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-300">整理裝備 (入伍包) 熟練度</span>
+                            <span class="text-fuchsia-500">20%</span>
+                        </div>
+                        <div class="w-full bg-gray-800 rounded-full h-2">
+                            <div class="bg-fuchsia-500 h-2 rounded-full" style="width: 20%"></div>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-gray-300">心理建設進度</span>
+                            <span class="text-yellow-400">50%</span>
+                        </div>
+                        <div class="w-full bg-gray-800 rounded-full h-2">
+                            <div class="bg-yellow-400 h-2 rounded-full" style="width: 50%"></div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="relative z-10 py-20 px-4">
+        <div class="max-w-4xl mx-auto warning-zone rounded-3xl p-8 md:p-12 text-center relative overflow-hidden">
+            <!-- 閃爍警告燈號 -->
+            <div class="absolute top-0 left-0 w-full h-1 bg-red-600 animate-pulse"></div>
+            
+            <h2 class="text-4xl md:text-5xl font-black text-red-500 mb-6 tracking-widest" style="text-shadow: 0 0 20px rgba(255,0,0,0.8);">
+                ⚠️ CRITICAL EVENT PENDING ⚠️
+            </h2>
+            
+            <p class="text-2xl md:text-3xl font-bold text-white mb-8">
+                下禮拜即將 <span class="text-red-400 text-5xl inline-block mx-2 animate-bounce">剃 光 頭</span>
+            </p>
+            
+            <div class="bg-black/50 p-6 rounded-xl border border-red-500/50 mb-8 inline-block">
+                <p class="text-gray-300 text-lg mb-2">毛囊存活倒數中，敬請把握最後有頭髮的李庭愷</p>
+                <div class="flex justify-center items-center gap-4 mt-4 text-3xl font-mono text-red-400">
+                    <div class="flex flex-col"><span id="days">07</span><span class="text-sm text-gray-500">DAYS</span></div> :
+                    <div class="flex flex-col"><span id="hours">23</span><span class="text-sm text-gray-500">HRS</span></div> :
+                    <div class="flex flex-col"><span id="mins">59</span><span class="text-sm text-gray-500">MIN</span></div> :
+                    <div class="flex flex-col"><span id="secs">59</span><span class="text-sm text-gray-500">SEC</span></div>
+                </div>
+            </div>
+
+            <p class="text-red-300 font-bold tracking-widest mt-4">
+                >> 任務目標：保家衛國，然後平安退伍 <<
+            </p>
+        </div>
+    </section>
+
+    <footer class="relative z-10 text-center py-10 border-t border-gray-800 bg-black/80 mt-20">
+        <p class="text-gray-500 font-mono text-sm">
+            © 2026 李庭愷 (Ting-Kai Li). SYSTEM SHUTTING DOWN SOON FOR MILITARY SERVICE.
+        </p>
+    </footer>
+
+    <script>
+        // 假倒數計時器邏輯 (設定為隨機倒數 7 天)
+        function startCountdown() {
+            let days = 7;
+            let hours = 23;
+            let mins = 59;
+            let secs = 59;
+
+            setInterval(() => {
+                secs--;
+                if (secs < 0) {
+                    secs = 59;
+                    mins--;
+                }
+                if (mins < 0) {
+                    mins = 59;
+                    hours--;
+                }
+                if (hours < 0) {
+                    hours = 23;
+                    days--;
+                }
+
+                document.getElementById('days').textContent = days.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('mins').textContent = mins.toString().padStart(2, '0');
+                document.getElementById('secs').textContent = secs.toString().padStart(2, '0');
+            }, 1000);
+        }
+        startCountdown();
+
+        // Canvas 粒子特效
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        
+        let width, height;
+        let particles = [];
+        
+        const mouse = {
+            x: null,
+            y: null,
+            radius: 150
+        };
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        window.addEventListener('resize', resize);
+        resize();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2 + 1;
+                this.speedX = Math.random() * 2 - 1;
+                this.speedY = Math.random() * 2 - 1;
+                // 隨機分配青色或洋紅色
+                this.color = Math.random() > 0.5 ? 'rgba(0, 255, 255, 0.7)' : 'rgba(255, 0, 255, 0.7)';
+            }
+            
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // 邊界反彈
+                if (this.x > width || this.x < 0) this.speedX *= -1;
+                if (this.y > height || this.y < 0) this.speedY *= -1;
+
+                // 滑鼠互動：避開滑鼠
+                if (mouse.x != null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < mouse.radius) {
+                        const forceDirectionX = dx / distance;
+                        const forceDirectionY = dy / distance;
+                        const force = (mouse.radius - distance) / mouse.radius;
+                        const directionX = forceDirectionX * force * 5;
+                        const directionY = forceDirectionY * force * 5;
+                        this.x -= directionX;
+                        this.y -= directionY;
+                    }
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            let numberOfParticles = (width * height) / 9000;
+            for (let i = 0; i < numberOfParticles; i++) {
+                particles.push(new Particle());
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, width, height);
+            
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+                
+                // 繪製粒子間的連線
+                for (let j = i; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 100) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(0, 255, 255, ${0.2 - distance/500})`;
+                        ctx.lineWidth = 1;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        // 初始化並開始動畫
+        initParticles();
+        animateParticles();
+
+        // 離開視窗時重置滑鼠位置
+        window.addEventListener('mouseout', () => {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
+
+    </script>
+</body>
+</html>
